@@ -1,0 +1,27 @@
+{
+  "folders": [
+    {
+      "path": "Reduplication"
+    },
+    {
+      "name": "hello world",
+      "path": "hello world"
+    },
+    {
+      "path": "palindrome"
+    },
+    {
+      "path": "Task1_UniqueNumbers"
+    },
+    {
+      "path": "Task2_NumberOfPairs"
+    },
+    {
+      "path": "Task3_HighestPair"
+    },
+    {
+      "path": "FairGrading"
+    }
+  ],
+  "settings": {}
+}

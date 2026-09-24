@@ -1,0 +1,70 @@
+@page "/weather"
+@attribute [StreamRendering]
+@inject YrWeatherService WeatherService
+
+@* Titeln som visas i webbläsarfliken. *@
+<PageTitle>Weather</PageTitle>
+
+<h1>Weather</h1>
+
+<p>This page shows a simple forecast from Yr.</p>
+
+@* Visar ett kort felmeddelande om API-anropet misslyckas. *@
+@if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <p class="text-danger">Could not load the weather forecast.</p>
+}
+@* Visar laddningstext medan prognosen hämtas. *@
+else if (report == null)
+{
+    <p><em>Loading...</em></p>
+}
+@* Visar prognosen i en vanlig Bootstrap-tabell. *@
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th aria-label="Temperature in Celsius">Temp. (C)</th>
+                <th>Summary</th>
+            </tr>
+        </thead>
+        <tbody>
+            @* En rad skrivs ut för varje prognosdag. *@
+            @foreach (var forecast in report.Days)
+            {
+                <tr>
+                    <td>@forecast.Date.ToShortDateString()</td>
+                    <td>@forecast.TemperatureC.ToString("0.#")</td>
+                    <td>@forecast.Summary</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <p class="text-muted">Location: @report.PlaceName. Updated @report.UpdatedAt.ToLocalTime().ToString("g").</p>
+}
+
+@code {
+    // Här sparas väderrapporten när den har laddats in.
+    private WeatherReport? report;
+
+    // Den här används om API-anropet misslyckas.
+    private string? errorMessage;
+
+    // Den här metoden körs automatiskt när sidan laddas.
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            // Hämtar prognosen från servicen.
+            report = await WeatherService.GetForecastAsync();
+        }
+        catch
+        {
+            // Om något går fel visar sidan ett enkelt felmeddelande.
+            errorMessage = "Error";
+        }
+    }
+}
